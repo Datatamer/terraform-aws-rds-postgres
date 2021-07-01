@@ -23,7 +23,7 @@ variable "parameter_group_name" {
 
 variable "identifier_prefix" {
   description = "Identifier prefix for the RDS instance"
-  type        = "string"
+  type        = string
   default     = "tamr-rds-"
 }
 

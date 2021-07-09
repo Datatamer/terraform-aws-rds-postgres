@@ -8,11 +8,23 @@ output "rds_postgres_id" {
   description = "ID of the of the RDS instance"
 }
 
-output "rds_sg_id" {
-  value       = module.rds_sg.rds_sg_id
-  description = "ID of the security group attached to the rds instance"
+output "rds_security_group_ids" {
+  value       = var.security_group_ids
+  description = "List of security group ids attached to the rds instance"
 }
 
 output "rds_hostname" {
   value = aws_db_instance.rds_postgres.address
+}
+
+output "rds_db_port" {
+  value = aws_db_instance.rds_postgres.port
+}
+
+output "rds_username" {
+  value = aws_db_instance.rds_postgres.username
+}
+
+output "rds_dbname" {
+  value = aws_db_instance.rds_postgres.name
 }

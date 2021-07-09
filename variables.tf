@@ -1,16 +1,22 @@
 variable "password" {
-  description = "The postgres password"
+  description = "The password for the master DB user."
   type        = string
 }
 
 variable "username" {
-  description = "The postgres username"
+  description = "The username for the master DB user."
   type        = string
   default     = "tamr"
 }
 
+variable "db_port" {
+  description = "The port on which the database accepts connections."
+  type        = number
+  default     = 5432
+}
+
 variable "postgres_name" {
-  description = "The name of the postgres instance"
+  description = "The name of the postgres database to create on the DB instance"
   type        = string
   default     = "tamr_rds_db"
 }
@@ -81,10 +87,14 @@ variable "apply_immediately" {
   default     = false
 }
 
-variable "subnet_name" {
-  description = "The name of the subnet to add the RDS instance to"
+variable "subnet_group_name" {
+  description = "The name of the subnet group to add the RDS instance to"
   type        = string
-  default     = null
+}
+
+variable "rds_subnet_ids" {
+  description = "VPC subnet IDs in subnet group"
+  type        = list(string)
 }
 
 variable "copy_tags_to_snapshot" {
@@ -95,7 +105,7 @@ variable "copy_tags_to_snapshot" {
 
 variable "additional_tags" {
   description = "Additional tags to set on the RDS instance"
-  type        = map
+  type        = map(string)
   default     = {}
 }
 
@@ -105,13 +115,8 @@ variable "security_group_name" {
   default     = "tamr_rds_sg"
 }
 
-variable "tamr_vm_sg_id" {
-  description = "Security group id attached to the tamr vm"
-  type        = string
-}
-
-variable "spark_cluster_sg_ids" {
-  description = "Security group is attached to the ec2 instances of EMR Spark"
+variable "security_group_ids" {
+  description = "List of security group IDs to associate"
   type        = list(string)
 }
 

@@ -1,24 +1,29 @@
-variable "postgres_db_name" {
+variable "vpc_id" {
   type        = string
-  description = "Name of the postgres db"
+  description = "VPC ID of network."
 }
 
-variable "parameter_group_name" {
-  type        = string
-  description = "Name of the parameter group"
+variable "subnet_ids" {
+  type        = list(string)
+  description = "List of at least 2 subnets in different AZs for DB subnet group"
 }
 
-variable "identifier_prefix" {
-  type        = string
-  description = "Identifier prefix for the resources"
+variable "security_group_ids" {
+  description = "List of security group IDs to allow ingress from (i.e. Spark cluster SG IDs, Tamr VM SG ID)"
+  type        = list(string)
 }
 
-variable "pg_username" {
-  type        = string
-  description = "Username for postgres"
+variable "name_prefix" {
+  description = "A string to prepend to names of resources created by this example"
 }
 
-variable "pg_password" {
-  type        = string
-  description = "Password for postgres"
+variable "ingress_cidr_blocks" {
+  description = "CIDR blocks to attach to security groups for ingress"
+  type = list(string)
+}
+
+variable "egress_cidr_blocks" {
+  description = "CIDR blocks to attach to security groups for egress"
+  type = list(string)
+  default = ["0.0.0.0/0"]
 }

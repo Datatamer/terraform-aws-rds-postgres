@@ -19,14 +19,12 @@ import (
 func TestTerraformCreateRDS(t *testing.T) {
 	t.Parallel()
 
-	// randomId := "qurwrs"
-	randomId := strings.ToLower(random.UniqueId())
-	namePrefix := fmt.Sprintf("%s-%s", "terratest-rds", randomId)
-	expectedDBName := strings.ReplaceAll(namePrefix, "-", "_") // db names don't accept hyphens
+	namePrefix := fmt.Sprintf("%s-%s", "terratest-rds", strings.ToLower(random.UniqueId()))
+	// db names don't accept hyphens
+	expectedDBName := strings.ReplaceAll(namePrefix, "-", "_")
 
 	// Getting a random region between the US ones
 	awsRegion := aws.GetRandomRegion(t, []string{"us-east-1", "us-east-2", "us-west-1", "us-west-2"}, nil)
-	// awsRegion := "us-east-1"
 
 	expectedUser := "tamruser"
 	pw := "tamrpassword"
@@ -49,22 +47,24 @@ func TestTerraformCreateRDS(t *testing.T) {
 		},
 	})
 
+	// terraform destroy when this function returns
 	defer terraform.Destroy(t, terraformOptions)
+
 	terraform.InitAndApply(t, terraformOptions)
 
-	ords := terraform.OutputAll(t, terraformOptions)
+	oRDS := terraform.OutputAll(t, terraformOptions)
 
-	oRDSInstanceID := ords["rds_postgres_id"].(string)
-	oRDSSGIDs := ords["rds_security_group_ids"].([]interface{})
-	oRDShostname := ords["rds_hostname"].(string)
-	oRDSport := ords["rds_db_port"].(float64)
-	oRDSuser := ords["rds_username"].(string)
-	oDBName := ords["rds_dbname"].(string)
+	oRDSInstanceID := oRDS["rds_postgres_id"].(string)
+	oRDSSGIDs := oRDS["rds_security_group_ids"].([]interface{})
+	oRDShostname := oRDS["rds_hostname"].(string)
+	oRDSport := oRDS["rds_db_port"].(float64)
+	oRDSuser := oRDS["rds_username"].(string)
+	oDBName := oRDS["rds_dbname"].(string)
 
 	// Fails test if Instance ID is nil
 	require.NotNil(t, oRDSInstanceID)
 
-	// Information in RDS API can take more than 20 mins to be available. We retry for 40mins before proceeding
+	// Information in RDS API can take more than 20 mins to be available. We retry for 40mins before failing
 	rdsObj := retry.DoWithRetryInterface(t, "Waiting RDS API to be available", 20, 2*time.Minute, func() (interface{}, error) {
 		return aws.GetRdsInstanceDetailsE(t, oRDSInstanceID, awsRegion)
 	}).(*rds.DBInstance)

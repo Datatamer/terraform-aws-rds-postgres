@@ -50,7 +50,7 @@ This terraform module will create:
 |------|-------------|------|---------|:--------:|
 | password | The password for the master DB user. | `string` | n/a | yes |
 | rds\_subnet\_ids | VPC subnet IDs in subnet group | `list(string)` | n/a | yes |
-| security\_group\_ids | List of security group IDs to allow ingress from (i.e. Spark cluster SG IDs, Tamr VM SG ID) | `list(string)` | n/a | yes |
+| security\_group\_ids | List of security group IDs to associate | `list(string)` | n/a | yes |
 | subnet\_group\_name | The name of the subnet group to add the RDS instance to | `string` | n/a | yes |
 | vpc\_id | VPC ID for the rds security group | `string` | n/a | yes |
 | additional\_cidrs | Additional CIDR to connect to RDS Postgres instance | `list(string)` | `[]` | no |

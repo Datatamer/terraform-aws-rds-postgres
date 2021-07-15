@@ -34,7 +34,7 @@ func TestTerraformCreateRDS(t *testing.T) {
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../examples/test_minimal",
+		TerraformDir: "../test_examples/test_minimal",
 
 		Vars: map[string]interface{}{
 			"postgres_db_name":     expectedDBName,

@@ -1,6 +1,0 @@
-#postgres_name        = "example-rds-postgres"
-postgres_db_name        = "terratest_aws_rds_example"
-parameter_group_name = "terratest-aws-rds-example-rds-postgres-pg"
-identifier_prefix    = "terratest-aws-rds-example-"
-pg_username = "tamruser"
-pg_password = "tamrpassword"

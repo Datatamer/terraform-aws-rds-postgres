@@ -1,29 +1,29 @@
 module "rds_postgres" {
-  #source               = "git::https://github.com/Datatamer/terraform-rds-postgres.git?ref=0.1.0"
+  #source               = "git::https://github.com/Datatamer/terraform-rds-postgres.git?ref=x.y.z"
   source               = "../../"
   postgres_name        = var.postgres_db_name
   parameter_group_name = var.parameter_group_name
-  identifier_prefix    = var.identifier_prefix
+  identifier_prefix    = var.name_prefix
   instance_class = "db.t3.medium"
-
+  engine_version = "12.5"
   username = var.pg_username
   password = var.pg_password
 
-  subnet_name          = module.vpc.database_subnet_group_name
+  subnet_group_name    = "${var.name_prefix}-subnet-group"
   vpc_id               = module.vpc.vpc_id
 
-  spark_cluster_sg_ids = [aws_security_group.example[0].id] #mock
-  tamr_vm_sg_id        = aws_security_group.example[1].id #mock
+  # Network requirement: DB subnet group needs a subnet in at least two Availability Zones
+  rds_subnet_ids = module.vpc.database_subnets
+  security_group_ids = module.rds-postgres-sg.security_group_ids
 }
 
-data "aws_region" "current" {
+data "aws_region" "current" { }
 
-}
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.1.0"
 
-  name = "hugo-test-vpc"
+  name = "${var.name_prefix}vpc"
   cidr = "172.18.0.0/18"
 
   azs             = [for i in ["a","b","c"] : "${data.aws_region.current.name}${i}"]
@@ -32,7 +32,7 @@ module "vpc" {
   
   database_subnets    = ["172.18.6.0/24", "172.18.7.0/24", "172.18.8.0/24"]
 
-  create_database_subnet_group           = true
+  create_database_subnet_group           = false
   create_database_subnet_route_table     = true
   create_database_internet_gateway_route = true
 
@@ -41,20 +41,23 @@ module "vpc" {
 
   tags = {
     Terraform = "true"
+    Terratest = "true"
     Environment = "dev"
   }
 }
 
-resource "aws_security_group" "example" {
-  count = 2
-  # ... other configuration ...
+module "sg-ports" {
+  # source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git//modules/rds-postgres-ports?ref=2.0.0"
+  source = "../../modules/rds-postgres-ports"
+}
 
+module "rds-postgres-sg" {
+  source = "git::git@github.com:Datatamer/terraform-aws-security-groups.git?ref=1.0.0"
   vpc_id = module.vpc.vpc_id
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+  ingress_cidr_blocks = module.vpc.database_subnets_cidr_blocks
+  egress_cidr_blocks = var.egress_cidr_blocks
+  ingress_ports  = module.sg-ports.ingress_ports
+  sg_name_prefix = var.name_prefix
+  egress_protocol = "all"
+  ingress_protocol = "tcp"
 }

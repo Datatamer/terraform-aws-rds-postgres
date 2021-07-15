@@ -8,7 +8,7 @@ variable "parameter_group_name" {
   description = "Name of the parameter group"
 }
 
-variable "identifier_prefix" {
+variable "name_prefix" {
   type        = string
   description = "Identifier prefix for the resources"
 }
@@ -23,13 +23,8 @@ variable "pg_password" {
   description = "Password for postgres"
 }
 
-# variable "spark_sg_id_list" {
-#   type  = list(string)
-#   description = "List of IDs of Sec groups"
-# }
-
-
-# variable "tamr_vm_sg_id" {
-#   type  = string
-#   description = "ID of Tamr VM Sec groups"
-# }
+variable "egress_cidr_blocks" {
+  description = "CIDR blocks to attach to security groups for egress"
+  type = list(string)
+  default = ["0.0.0.0/0"]
+}

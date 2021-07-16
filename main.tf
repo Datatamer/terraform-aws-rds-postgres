@@ -8,6 +8,7 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
 resource "aws_db_subnet_group" "rds_postgres_subnet_group" {
   name       = var.subnet_group_name
   subnet_ids = var.rds_subnet_ids
+  tags       = var.additional_tags
 }
 
 resource "aws_db_instance" "rds_postgres" {

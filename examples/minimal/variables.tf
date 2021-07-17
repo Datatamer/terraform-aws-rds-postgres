@@ -19,11 +19,11 @@ variable "name_prefix" {
 
 variable "ingress_cidr_blocks" {
   description = "CIDR blocks to attach to security groups for ingress"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "egress_cidr_blocks" {
   description = "CIDR blocks to attach to security groups for egress"
-  type = list(string)
-  default = ["0.0.0.0/0"]
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }

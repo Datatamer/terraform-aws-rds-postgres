@@ -54,7 +54,7 @@ This terraform module will create:
 | subnet\_group\_name | The name of the subnet group to add the RDS instance to | `string` | n/a | yes |
 | vpc\_id | VPC ID for the rds security group | `string` | n/a | yes |
 | additional\_cidrs | Additional CIDR to connect to RDS Postgres instance | `list(string)` | `[]` | no |
-| additional\_tags | Additional tags to set on the RDS instance | `map(string)` | `{}` | no |
+| additional\_tags | [DEPRECATED: Use `tags` instead] Additional tags to set on the RDS instance. | `map(string)` | `{}` | no |
 | allocated\_storage | Allocate storage | `number` | `20` | no |
 | apply\_immediately | Apply immediately, do not set this to true for production | `bool` | `false` | no |
 | backup\_retention\_period | Backup retention period in days | `number` | `14` | no |
@@ -72,6 +72,7 @@ This terraform module will create:
 | security\_group\_name | Name for the security group for the rds instance | `string` | `"tamr_rds_sg"` | no |
 | skip\_final\_snapshot | Skip final snapshot | `bool` | `true` | no |
 | storage\_type | Storage type (e.g. gp2, io1) | `string` | `"gp2"` | no |
+| tags | A map of tags to add to all resources. Replaces `additional_tags`. | `map(string)` | `{}` | no |
 | username | The username for the master DB user. | `string` | `"tamr"` | no |
 
 ## Outputs

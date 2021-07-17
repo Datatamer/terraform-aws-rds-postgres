@@ -1,13 +1,18 @@
+locals {
+  effective_tags = length(var.tags) > 0 ? var.tags : var.additional_tags
+}
+
 resource "aws_db_parameter_group" "rds_postgres_pg" {
   name        = var.parameter_group_name
   family      = var.parameter_group_family
   description = "TAMR RDS parameter group"
-  tags        = var.additional_tags
+  tags        = local.effective_tags
 }
 
 resource "aws_db_subnet_group" "rds_postgres_subnet_group" {
   name       = var.subnet_group_name
   subnet_ids = var.rds_subnet_ids
+  tags       = local.effective_tags
 }
 
 resource "aws_db_instance" "rds_postgres" {
@@ -41,7 +46,7 @@ resource "aws_db_instance" "rds_postgres" {
   apply_immediately = var.apply_immediately
 
   copy_tags_to_snapshot = var.copy_tags_to_snapshot
-  tags                  = var.additional_tags
+  tags                  = local.effective_tags
 
   lifecycle {
     ignore_changes = [password]

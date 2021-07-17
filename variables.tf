@@ -104,8 +104,14 @@ variable "copy_tags_to_snapshot" {
 }
 
 variable "additional_tags" {
-  description = "Additional tags to set on the RDS instance"
   type        = map(string)
+  description = "[DEPRECATED: Use `tags` instead] Additional tags to set on the RDS instance."
+  default     = {}
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to add to all resources. Replaces `additional_tags`."
   default     = {}
 }
 

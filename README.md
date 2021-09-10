@@ -7,7 +7,7 @@ This repo follows the [terraform standard module structure](https://www.terrafor
 Inline example implementation of the module.  This is the most basic example of what it would look like to use this module.
 ```
 module "rds_postgres" {
-  source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git?ref=2.0.0"
+  source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git?ref=x.y.z"
   postgres_name        = "example_rds_postgres"
   parameter_group_name = "example-rds-postgres-pg"
   identifier_prefix    = "example-rds-"
@@ -54,14 +54,15 @@ This terraform module will create:
 | subnet\_group\_name | The name of the subnet group to add the RDS instance to | `string` | n/a | yes |
 | vpc\_id | VPC ID for the rds security group | `string` | n/a | yes |
 | additional\_cidrs | Additional CIDR to connect to RDS Postgres instance | `list(string)` | `[]` | no |
-| additional\_tags | Additional tags to set on the RDS instance | `map(string)` | `{}` | no |
+| additional\_tags | [DEPRECATED: Use `tags` instead] Additional tags to set on the RDS instance. | `map(string)` | `{}` | no |
 | allocated\_storage | Allocate storage | `number` | `20` | no |
 | apply\_immediately | Apply immediately, do not set this to true for production | `bool` | `false` | no |
+| auto\_minor\_version\_upgrade | Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window | `bool` | `true` | no |
 | backup\_retention\_period | Backup retention period in days | `number` | `14` | no |
 | backup\_window | Backup window | `string` | `"03:29-03:59"` | no |
 | copy\_tags\_to\_snapshot | Copy tags to snapshots | `bool` | `true` | no |
 | db\_port | The port on which the database accepts connections. | `number` | `5432` | no |
-| engine\_version | Version of RDS Postgres | `string` | `"12.3"` | no |
+| engine\_version | Version of RDS Postgres | `string` | `"12"` | no |
 | identifier\_prefix | Identifier prefix for the RDS instance | `string` | `"tamr-rds-"` | no |
 | instance\_class | Instance class | `string` | `"db.m4.large"` | no |
 | maintenance\_window | Maintenance window | `string` | `"sun:04:32-sun:05:02"` | no |
@@ -72,6 +73,7 @@ This terraform module will create:
 | security\_group\_name | Name for the security group for the rds instance | `string` | `"tamr_rds_sg"` | no |
 | skip\_final\_snapshot | Skip final snapshot | `bool` | `true` | no |
 | storage\_type | Storage type (e.g. gp2, io1) | `string` | `"gp2"` | no |
+| tags | A map of tags to add to all resources. Replaces `additional_tags`. | `map(string)` | `{}` | no |
 | username | The username for the master DB user. | `string` | `"tamr"` | no |
 
 ## Outputs

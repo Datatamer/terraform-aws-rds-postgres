@@ -1,5 +1,14 @@
 # Tamr Terraform Template Repo
 
+## v3.0.0 - July 27th 2021
+* Updates default engine version to not specify a minor version
+* Adds new variable `auto_minor_version_upgrade` to allow AWS to upgrade RDS minor versions
+
+## v2.1.0 - July 12nd 2021
+* Adds tags for RDS Subnet Group.
+* Adds new variable `tags` to set tags for all resources
+* Deprecates `additional_tags` in favor of `tags`
+
 ## v2.0.0 - June 30th 2021
 * Accepts a list of security groups
 * Returns a list of ports used by RDS

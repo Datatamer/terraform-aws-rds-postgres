@@ -104,8 +104,14 @@ variable "copy_tags_to_snapshot" {
 }
 
 variable "additional_tags" {
-  description = "Additional tags to set on the RDS instance"
   type        = map(string)
+  description = "[DEPRECATED: Use `tags` instead] Additional tags to set on the RDS instance."
+  default     = {}
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to add to all resources. Replaces `additional_tags`."
   default     = {}
 }
 
@@ -134,11 +140,17 @@ variable "additional_cidrs" {
 variable "engine_version" {
   description = "Version of RDS Postgres"
   type        = string
-  default     = "12.3"
+  default     = "12"
 }
 
 variable "parameter_group_family" {
   description = "The family of the DB parameter group"
   type        = string
   default     = "postgres12"
+}
+
+variable "auto_minor_version_upgrade" {
+  default     = true
+  type        = bool
+  description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
 }

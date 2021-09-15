@@ -1,0 +1,6 @@
+#postgres_name        = "example-rds-postgres"
+# postgres_db_name     = "terratest_rds_oxpgcb"
+# parameter_group_name = "terratest-rds-oxpgcb-rds-postgres-pg"
+# name_prefix          = "terratest-rds-oxpgcb-"
+# pg_username          = "tamruser"
+# pg_password          = "tamrpassword"

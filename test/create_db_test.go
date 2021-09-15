@@ -1,93 +1,97 @@
-package tests
+package test
 
 import (
 	"fmt"
 	"strings"
 	"testing"
-	"time"
 
-	"github.com/aws/aws-sdk-go/service/rds"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/gruntwork-io/terratest/modules/retry"
-
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
+const expectedPw = "tamrpassword"
+
+func initTestCases() []RdsTestCase {
+	return []RdsTestCase{
+		{
+			testName:         "test1",
+			expectApplyError: false,
+			vars: map[string]interface{}{
+				"pg_password":          expectedPw,
+				"pg_username":          "",
+				"postgres_db_name":     "",
+				"parameter_group_name": "",
+				"name_prefix":          "",
+			},
+		},
+	}
+}
 func TestTerraformCreateRDS(t *testing.T) {
-	t.Parallel()
 
-	namePrefix := fmt.Sprintf("%s-%s", "terratest-rds", strings.ToLower(random.UniqueId()))
-	// db names don't accept hyphens
-	expectedDBName := strings.ReplaceAll(namePrefix, "-", "_")
+	testCases := initTestCases()
 
-	// Getting a random region between the US ones
-	awsRegion := aws.GetRandomRegion(t, []string{"us-east-1", "us-east-2", "us-west-1", "us-west-2"}, nil)
+	for _, testCase := range testCases {
+		testCase := testCase
 
-	expectedUser := "tamruser"
-	pw := "tamrpassword"
-	expectedPort := int64(5432)
+		t.Run(testCase.testName, func(t *testing.T) {
+			t.Parallel()
 
-	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		// The path to where our Terraform code is located
-		TerraformDir: "../test_examples/test_minimal",
+			// These will create a tempTestFolder for each bucketTestCase.
+			tempTestFolder := test_structure.CopyTerraformFolderToTemp(t, "..", "test_examples/minimal")
 
-		Vars: map[string]interface{}{
-			"postgres_db_name":     expectedDBName,
-			"parameter_group_name": fmt.Sprintf("%s-rds-postgres-pg", namePrefix),
-			"name_prefix":          fmt.Sprintf("%s-", namePrefix),
-			"pg_username":          expectedUser,
-			"pg_password":          pw,
-		},
-		// Environment variables to set when running Terraform
-		EnvVars: map[string]string{
-			"AWS_DEFAULT_REGION": awsRegion,
-		},
-	})
+			// this stage will generate a random `awsRegion` and a `uniqueId` to be used in tests.
+			test_structure.RunTestStage(t, "pick_new_randoms", func() {
+				usRegions := []string{"us-east-1", "us-east-2", "us-west-1", "us-west-2"}
+				// This function will first check for the Env Var TERRATEST_REGION and return its value if != ""
+				awsRegion := aws.GetRandomStableRegion(t, usRegions, nil)
 
-	// terraform destroy when this function returns
-	defer terraform.Destroy(t, terraformOptions)
+				test_structure.SaveString(t, tempTestFolder, "region", awsRegion)
+				test_structure.SaveString(t, tempTestFolder, "unique_id", strings.ToLower(random.UniqueId()))
+			})
 
-	terraform.InitAndApply(t, terraformOptions)
+			defer test_structure.RunTestStage(t, "teardown", func() {
+				teraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
+				terraform.Destroy(t, teraformOptions)
+			})
 
-	oRDS := terraform.OutputAll(t, terraformOptions)
+			test_structure.RunTestStage(t, "setup_options", func() {
+				awsRegion := test_structure.LoadString(t, tempTestFolder, "region")
+				uniqueID := test_structure.LoadString(t, tempTestFolder, "unique_id")
 
-	oRDSInstanceID := oRDS["rds_postgres_id"].(string)
-	oRDSSGIDs := oRDS["rds_security_group_ids"].([]interface{})
-	oRDShostname := oRDS["rds_hostname"].(string)
-	oRDSport := oRDS["rds_db_port"].(float64)
-	oRDSuser := oRDS["rds_username"].(string)
-	oDBName := oRDS["rds_dbname"].(string)
+				testCase.vars["parameter_group_name"] = fmt.Sprintf("terratest-pg-%s", uniqueID)
+				testCase.vars["name_prefix"] = fmt.Sprintf("terratest-%s", uniqueID)
+				testCase.vars["pg_username"] = uniqueID
+				testCase.vars["postgres_db_name"] = fmt.Sprintf("db_%s", uniqueID)
 
-	// Fails test if Instance ID is nil
-	require.NotNil(t, oRDSInstanceID)
+				terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+					TerraformDir: tempTestFolder,
+					Vars:         testCase.vars,
+					EnvVars: map[string]string{
+						"AWS_REGION": awsRegion,
+					},
+				})
 
-	// Information in RDS API can take more than 20 mins to be available. We retry for 40mins before failing
-	rdsObj := retry.DoWithRetryInterface(t, "Waiting RDS API to be available", 20, 2*time.Minute, func() (interface{}, error) {
-		return aws.GetRdsInstanceDetailsE(t, oRDSInstanceID, awsRegion)
-	}).(*rds.DBInstance)
+				test_structure.SaveTerraformOptions(t, tempTestFolder, terraformOptions)
+			})
 
-	// Verify that the address is not null and equal to output
-	address := aws.GetAddressOfRdsInstance(t, oRDSInstanceID, awsRegion)
-	assert.NotNil(t, address)
-	assert.Equal(t, oRDShostname, address)
+			test_structure.RunTestStage(t, "create_rds", func() {
+				terraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
+				terraform.InitAndApply(t, terraformOptions)
+			})
 
-	// Verify that the DB instance is listening on the expected port and equal to output
-	port := aws.GetPortOfRdsInstance(t, oRDSInstanceID, awsRegion)
-	assert.Equal(t, expectedPort, port)
-	assert.Equal(t, int64(oRDSport), port)
-
-	// Verify Sec Group IDs output is not nil
-	assert.NotNil(t, oRDSSGIDs)
-
-	// Verify that user is the same as expected and equal to output
-	assert.Equal(t, expectedUser, *rdsObj.MasterUsername)
-	assert.NotNil(t, oRDSuser)
-
-	// Verify that user is the same as expected and equal to output
-	assert.Equal(t, expectedDBName, *rdsObj.DBName)
-	assert.Equal(t, oDBName, *rdsObj.DBName)
-
+			test_structure.RunTestStage(t, "validate", func() {
+				awsRegion := test_structure.LoadString(t, tempTestFolder, "region")
+				terraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
+				validateModuleOutputs(t,
+					terraformOptions,
+					awsRegion,
+					int64(5432),
+					testCase.vars["pg_username"].(string),
+					testCase.vars["postgres_db_name"].(string),
+				)
+			})
+		})
+	}
 }

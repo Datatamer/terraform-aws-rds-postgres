@@ -26,11 +26,11 @@ module "vpc" {
   name = "${var.name_prefix}vpc"
   cidr = "172.18.0.0/18"
 
-  azs             = [for i in ["a", "b", "c"] : "${data.aws_region.current.name}${i}"]
-  private_subnets = ["172.18.0.0/24", "172.18.1.0/24", "172.18.2.0/24"]
-  public_subnets  = ["172.18.3.0/24", "172.18.4.0/24", "172.18.5.0/24"]
+  azs             = [for i in ["a", "b"] : "${data.aws_region.current.name}${i}"]
+  private_subnets = ["172.18.0.0/24", "172.18.1.0/24"]
+  public_subnets  = ["172.18.3.0/24", "172.18.4.0/24"]
 
-  database_subnets = ["172.18.6.0/24", "172.18.7.0/24", "172.18.8.0/24"]
+  database_subnets = ["172.18.6.0/24", "172.18.7.0/24"]
 
   create_database_subnet_group           = false
   create_database_subnet_route_table     = true

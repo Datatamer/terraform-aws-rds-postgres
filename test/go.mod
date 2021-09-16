@@ -1,4 +1,4 @@
-module github.com/Datatamer/tamr-terraform-aws-rds-postgres
+module github.com/Datatamer/terraform-aws-rds-postgres
 
 go 1.16
 

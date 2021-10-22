@@ -1,30 +1,33 @@
-variable "postgres_db_name" {
-  type        = string
-  description = "Name of the postgres db"
-}
-
-variable "parameter_group_name" {
-  type        = string
-  description = "Name of the parameter group"
-}
-
 variable "name_prefix" {
   type        = string
   description = "Identifier prefix for the resources"
 }
 
-variable "pg_username" {
+variable "vpc_cidr" {
   type        = string
-  description = "Username for postgres"
+  description = "CIDR for VPC to be created"
 }
 
-variable "pg_password" {
-  type        = string
-  description = "Password for postgres"
+variable "database_subnets" {
+  description = "CIDR blocks to attach to use in subnets"
+  type        = list(string)
 }
 
 variable "egress_cidr_blocks" {
   description = "CIDR blocks to attach to security groups for egress"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+}
+
+variable "ingress_cidr_blocks" {
+  description = "CIDR blocks to attach to security groups for egress"
+  type        = list(string)
+}
+
+variable "tags" {
+  type = map(string)
+  default = {
+    Terraform   = "true"
+    Terratest   = "true"
+    Environment = "test"
+  }
 }

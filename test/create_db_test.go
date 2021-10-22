@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -11,7 +10,12 @@ import (
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-const expectedPw = "tamrpassword"
+// These const are declared according to what is found at "../../examples/minimal/main.tf"
+const (
+	expectedPw       = "examplePassword"
+	expectedUsername = "exampleUsername"
+	expectedDBName   = "example0"
+)
 
 func initTestCases() []RdsTestCase {
 	return []RdsTestCase{
@@ -19,11 +23,11 @@ func initTestCases() []RdsTestCase {
 			testName:         "test1",
 			expectApplyError: false,
 			vars: map[string]interface{}{
-				"pg_password":          expectedPw,
-				"pg_username":          "",
-				"postgres_db_name":     "",
-				"parameter_group_name": "",
-				"name_prefix":          "",
+				"vpc_cidr":            "172.18.0.0/18",
+				"database_subnets":    []string{"172.18.0.0/24", "172.18.1.0/24"},
+				"egress_cidr_blocks":  []string{"0.0.0.0/0"},
+				"ingress_cidr_blocks": []string{"0.0.0.0/0"},
+				"name_prefix":         "",
 			},
 		},
 	}
@@ -60,10 +64,7 @@ func TestTerraformCreateRDS(t *testing.T) {
 				awsRegion := test_structure.LoadString(t, tempTestFolder, "region")
 				uniqueID := test_structure.LoadString(t, tempTestFolder, "unique_id")
 
-				testCase.vars["parameter_group_name"] = fmt.Sprintf("terratest-pg-%s", uniqueID)
-				testCase.vars["name_prefix"] = fmt.Sprintf("terratest-%s", uniqueID)
-				testCase.vars["pg_username"] = uniqueID
-				testCase.vars["postgres_db_name"] = fmt.Sprintf("db_%s", uniqueID)
+				testCase.vars["name_prefix"] = uniqueID
 
 				terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 					TerraformDir: tempTestFolder,
@@ -88,8 +89,8 @@ func TestTerraformCreateRDS(t *testing.T) {
 					terraformOptions,
 					awsRegion,
 					int64(5432),
-					testCase.vars["pg_username"].(string),
-					testCase.vars["postgres_db_name"].(string),
+					expectedUsername,
+					expectedDBName,
 				)
 			})
 		})

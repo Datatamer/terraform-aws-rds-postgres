@@ -79,7 +79,13 @@ func TestTerraformCreateRDS(t *testing.T) {
 
 			test_structure.RunTestStage(t, "create_rds", func() {
 				terraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
-				terraform.InitAndApply(t, terraformOptions)
+				_, err := terraform.InitAndApplyE(t, terraformOptions)
+
+				if testCase.expectApplyError {
+					require.Error(t, err)
+					// If it failed as expected, we should skip the rest (validate function).
+					t.SkipNow()
+				}
 			})
 
 			test_structure.RunTestStage(t, "validate", func() {

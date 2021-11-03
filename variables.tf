@@ -154,3 +154,9 @@ variable "auto_minor_version_upgrade" {
   type        = bool
   description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
 }
+
+variable "enabled_cloudwatch_logs_exports" {
+  default     = true
+  type        = bool
+  description = "Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch"
+}

@@ -46,6 +46,8 @@ resource "aws_db_instance" "rds_postgres" {
 
   apply_immediately = var.apply_immediately
 
+  enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports ? ["postgresql"] : []
+
   copy_tags_to_snapshot = var.copy_tags_to_snapshot
   tags                  = local.effective_tags
 

@@ -8,7 +8,11 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
   description = "TAMR RDS parameter group"
   parameter {
     name = "log_statement"
-    value = "all"
+    value = var.param_log_statement
+  }
+  parameter {
+    name = "log_min_duration_statement"
+    value = var.param_log_min_duration_statement
   }
   tags        = local.effective_tags
 }

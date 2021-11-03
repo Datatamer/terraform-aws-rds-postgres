@@ -7,14 +7,14 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
   family      = var.parameter_group_family
   description = "TAMR RDS parameter group"
   parameter {
-    name = "log_statement"
+    name  = "log_statement"
     value = var.param_log_statement
   }
   parameter {
-    name = "log_min_duration_statement"
+    name  = "log_min_duration_statement"
     value = var.param_log_min_duration_statement
   }
-  tags        = local.effective_tags
+  tags = local.effective_tags
 }
 
 resource "aws_db_subnet_group" "rds_postgres_subnet_group" {

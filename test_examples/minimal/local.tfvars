@@ -1,6 +1,5 @@
-#postgres_name        = "example-rds-postgres"
-# postgres_db_name     = "terratest_rds_oxpgcb"
-# parameter_group_name = "terratest-rds-oxpgcb-rds-postgres-pg"
-# name_prefix          = "terratest-rds-oxpgcb-"
-# pg_username          = "tamruser"
-# pg_password          = "tamrpassword"
+name_prefix="my-test"
+vpc_cidr="172.33.0.0/18"
+database_subnets=["172.33.0.0/24", "172.33.1.0/24"]
+egress_cidr_blocks=["0.0.0.0/0"]
+ingress_cidr_blocks=["0.0.0.0/0"]

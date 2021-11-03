@@ -28,3 +28,11 @@ output "rds_username" {
 output "rds_dbname" {
   value = aws_db_instance.rds_postgres.name
 }
+
+output "cloudwatch_logs_path" {
+  value = (
+    var.enabled_cloudwatch_logs_exports ?
+    format("/aws/rds/instance/%s/postgresql", aws_db_instance.rds_postgres.id)
+    : ""
+  )
+}

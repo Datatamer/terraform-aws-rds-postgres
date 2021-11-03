@@ -6,6 +6,10 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
   name        = var.parameter_group_name
   family      = var.parameter_group_family
   description = "TAMR RDS parameter group"
+  parameter {
+    name = "log_statement"
+    value = "all"
+  }
   tags        = local.effective_tags
 }
 

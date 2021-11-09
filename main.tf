@@ -6,7 +6,15 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
   name        = var.parameter_group_name
   family      = var.parameter_group_family
   description = "TAMR RDS parameter group"
-  tags        = local.effective_tags
+  parameter {
+    name  = "log_statement"
+    value = var.param_log_statement
+  }
+  parameter {
+    name  = "log_min_duration_statement"
+    value = var.param_log_min_duration_statement
+  }
+  tags = local.effective_tags
 }
 
 resource "aws_db_subnet_group" "rds_postgres_subnet_group" {
@@ -45,6 +53,8 @@ resource "aws_db_instance" "rds_postgres" {
   skip_final_snapshot     = var.skip_final_snapshot
 
   apply_immediately = var.apply_immediately
+
+  enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports ? ["postgresql", "upgrade"] : []
 
   copy_tags_to_snapshot = var.copy_tags_to_snapshot
   tags                  = local.effective_tags

@@ -27,6 +27,18 @@ variable "parameter_group_name" {
   default     = "rds-postgres-pg"
 }
 
+variable "param_log_min_duration_statement" {
+  description = "(ms) Sets the minimum execution time above which statements will be logged."
+  type        = string
+  default     = "-1"
+}
+
+variable "param_log_statement" {
+  description = "Sets the type of statements logged. Valid values are none, ddl, mod, all"
+  type        = string
+  default     = "none"
+}
+
 variable "identifier_prefix" {
   description = "Identifier prefix for the RDS instance"
   type        = string
@@ -153,4 +165,10 @@ variable "auto_minor_version_upgrade" {
   default     = true
   type        = bool
   description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
+}
+
+variable "enabled_cloudwatch_logs_exports" {
+  default     = true
+  type        = bool
+  description = "Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch"
 }

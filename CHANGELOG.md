@@ -1,5 +1,8 @@
 # Tamr Terraform Template Repo
 
+## v3.1.0 - November 3rd 2021
+* Adds variables `enabled_cloudwatch_logs_exports`, `param_log_min_duration_statement` and `param_log_statement` configuring the logs and its publishing to CloudWatch
+
 ## v3.0.0 - July 27th 2021
 * Updates default engine version to not specify a minor version
 * Adds new variable `auto_minor_version_upgrade` to allow AWS to upgrade RDS minor versions

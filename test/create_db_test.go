@@ -18,6 +18,7 @@ const (
 	expectedDBName   = "example0"
 )
 
+// initTestCases initializes a list of RdsTestCase
 func initTestCases() []RdsTestCase {
 	return []RdsTestCase{
 		{
@@ -33,6 +34,8 @@ func initTestCases() []RdsTestCase {
 		},
 	}
 }
+
+// TestTerraformCreateRDS runs all test cases
 func TestTerraformCreateRDS(t *testing.T) {
 
 	testCases := initTestCases()

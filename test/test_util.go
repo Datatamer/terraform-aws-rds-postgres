@@ -19,6 +19,7 @@ type RdsTestCase struct {
 	expectApplyError bool
 }
 
+// validateModuleOutputs validates the values of outputs with expected values
 func validateModuleOutputs(t *testing.T, terraformOptions *terraform.Options, awsRegion string, expectedPort int64, expectedUser string, expectedDBName string) {
 
 	oRDS := terraform.OutputAll(t, terraformOptions)

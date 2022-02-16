@@ -1,5 +1,9 @@
 # Tamr Terraform Template Repo
 
+## v3.1.1 - February 16th 2022
+* Updates version file to prevent the major upgrade to the AWS provider version 4.0.
+* Adds new extensions to be ignored in the ".gitignore" file.
+
 ## v3.1.0 - November 3rd 2021
 * Adds variables `enabled_cloudwatch_logs_exports`, `param_log_min_duration_statement` and `param_log_statement` configuring the logs and its publishing to CloudWatch
 

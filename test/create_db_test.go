@@ -22,7 +22,7 @@ const (
 func initTestCases() []RdsTestCase {
 	return []RdsTestCase{
 		{
-			testName:         "test1",
+			testName:         "minimal",
 			expectApplyError: false,
 			vars: map[string]interface{}{
 				"vpc_cidr":            "172.18.0.0/18",

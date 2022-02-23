@@ -36,13 +36,13 @@ This terraform module will create:
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
-| aws | >= 3.36.0 |
+| aws | >= 3.36.0, < 4.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.36.0 |
+| aws | >= 3.36.0, < 4.0.0 |
 
 ## Inputs
 
@@ -62,11 +62,14 @@ This terraform module will create:
 | backup\_window | Backup window | `string` | `"03:29-03:59"` | no |
 | copy\_tags\_to\_snapshot | Copy tags to snapshots | `bool` | `true` | no |
 | db\_port | The port on which the database accepts connections. | `number` | `5432` | no |
+| enabled\_cloudwatch\_logs\_exports | Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch | `bool` | `true` | no |
 | engine\_version | Version of RDS Postgres | `string` | `"12"` | no |
 | identifier\_prefix | Identifier prefix for the RDS instance | `string` | `"tamr-rds-"` | no |
 | instance\_class | Instance class | `string` | `"db.m4.large"` | no |
 | maintenance\_window | Maintenance window | `string` | `"sun:04:32-sun:05:02"` | no |
 | max\_allocated\_storage | Max allocate storage | `number` | `1000` | no |
+| param\_log\_min\_duration\_statement | (ms) Sets the minimum execution time above which statements will be logged. | `string` | `"-1"` | no |
+| param\_log\_statement | Sets the type of statements logged. Valid values are none, ddl, mod, all | `string` | `"none"` | no |
 | parameter\_group\_family | The family of the DB parameter group | `string` | `"postgres12"` | no |
 | parameter\_group\_name | The name of the rds parameter group | `string` | `"rds-postgres-pg"` | no |
 | postgres\_name | The name of the postgres database to create on the DB instance | `string` | `"tamr_rds_db"` | no |
@@ -80,6 +83,7 @@ This terraform module will create:
 
 | Name | Description |
 |------|-------------|
+| cloudwatch\_logs\_path | n/a |
 | rds\_db\_port | n/a |
 | rds\_dbname | n/a |
 | rds\_hostname | n/a |

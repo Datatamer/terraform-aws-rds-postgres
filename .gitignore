@@ -6,6 +6,9 @@
 *.tfstate
 *.tfstate.*
 
+# Terraform module lock files
+*.terraform.lock.hcl
+
 # Crash log files
 crash.log
 
@@ -38,3 +41,6 @@ terratest.tf.json
 
 # Ignore makefile
 ops-makefile
+
+# Ignore tfvars
+**/*.tfvars

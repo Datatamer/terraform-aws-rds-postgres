@@ -1,3 +1,15 @@
+This deploys:
+- a VPC, using the AWS VPC Module. (Can change to tamr-networking later)
+- the examples/minimal resources.
+
+Go code (Terratest) runs this and makes sure our examples are working.
+The validations are:
+- Address
+- Port
+- Security Group
+- username
+- dbname
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 

@@ -13,7 +13,6 @@ No provider.
 |------|-------------|------|---------|:--------:|
 | ingress\_cidr\_blocks | CIDR blocks to attach to security groups for ingress | `list(string)` | n/a | yes |
 | name\_prefix | A string to prepend to names of resources created by this example | `any` | n/a | yes |
-| security\_group\_ids | List of security group IDs to allow ingress from (i.e. Spark cluster SG IDs, Tamr VM SG ID) | `list(string)` | n/a | yes |
 | subnet\_ids | List of at least 2 subnets in different AZs for DB subnet group | `list(string)` | n/a | yes |
 | vpc\_id | VPC ID of network. | `string` | n/a | yes |
 | egress\_cidr\_blocks | CIDR blocks to attach to security groups for egress | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
@@ -24,6 +23,12 @@ No provider.
 | Name | Description |
 |------|-------------|
 | ingress\_ports | List of ingress ports |
-| rds | n/a |
+| rds\_db\_port | n/a |
+| rds\_dbname | n/a |
+| rds\_hostname | n/a |
+| rds\_postgres\_id | n/a |
+| rds\_postgres\_pg\_id | n/a |
+| rds\_security\_group\_ids | n/a |
+| rds\_username | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

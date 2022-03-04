@@ -22,13 +22,6 @@ No provider.
 
 | Name | Description |
 |------|-------------|
-| ingress\_ports | List of ingress ports |
-| rds\_db\_port | n/a |
-| rds\_dbname | n/a |
-| rds\_hostname | n/a |
-| rds\_postgres\_id | n/a |
-| rds\_postgres\_pg\_id | n/a |
-| rds\_security\_group\_ids | n/a |
-| rds\_username | n/a |
+| rds | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

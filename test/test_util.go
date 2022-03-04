@@ -1,6 +1,7 @@
 package test
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -22,14 +23,14 @@ type RdsTestCase struct {
 // validateModuleOutputs validates the values of outputs with expected values
 func validateModuleOutputs(t *testing.T, terraformOptions *terraform.Options, awsRegion string, expectedPort int64, expectedUser string, expectedDBName string) {
 
-	oRDS := terraform.OutputAll(t, terraformOptions)
+	oRDS := terraform.OutputMap(t, terraformOptions, "rds")
 
-	oRDSInstanceID := oRDS["rds_postgres_id"].(string)
-	oRDSSGIDs := oRDS["rds_security_group_ids"].([]interface{})
-	oRDShostname := oRDS["rds_hostname"].(string)
-	oRDSport := oRDS["rds_db_port"].(float64)
-	oRDSuser := oRDS["rds_username"].(string)
-	oDBName := oRDS["rds_dbname"].(string)
+	oRDSInstanceID := oRDS["rds_postgres_id"]
+	oRDSSGIDs := oRDS["rds_security_group_ids"]
+	oRDShostname := oRDS["rds_hostname"]
+	oRDSport, _ := strconv.ParseInt(oRDS["rds_db_port"], 10, 64)
+	oRDSuser := oRDS["rds_username"]
+	oDBName := oRDS["rds_dbname"]
 
 	// Fails test if Instance ID is nil
 	require.NotNil(t, oRDSInstanceID)

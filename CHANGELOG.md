@@ -1,5 +1,8 @@
 # Tamr Terraform Template Repo
 
+## v3.1.2 - May 11th 2022
+* Adds idle_in_transaction_session_timeout to parameter group
+
 ## v3.1.1 - February 16th 2022
 * Updates version file to prevent the major upgrade to the AWS provider version 4.0.
 * Adds new extensions to be ignored in the ".gitignore" file.

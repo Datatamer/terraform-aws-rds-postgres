@@ -14,6 +14,11 @@ resource "aws_db_parameter_group" "rds_postgres_pg" {
     name  = "log_min_duration_statement"
     value = var.param_log_min_duration_statement
   }
+
+  parameter {
+    name  = "idle_in_transaction_session_timeout"
+    value = 0
+  }
   tags = local.effective_tags
 }
 

@@ -1,10 +1,14 @@
 package test
 
 import (
+	"os"
 	"strings"
 	"testing"
 
+	terratestutils "github.com/Datatamer/go-terratest-functions/pkg/terratest_utils"
+	"github.com/Datatamer/go-terratest-functions/pkg/types"
 	"github.com/gruntwork-io/terratest/modules/aws"
+	"github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
@@ -23,6 +27,7 @@ func initTestCases() []RdsTestCase {
 	return []RdsTestCase{
 		{
 			testName:         "minimal",
+			tfDir:            "test_examples/minimal",
 			expectApplyError: false,
 			vars: map[string]interface{}{
 				"vpc_cidr":            "172.18.0.0/18",
@@ -37,9 +42,11 @@ func initTestCases() []RdsTestCase {
 
 // TestTerraformCreateRDS runs all test cases
 func TestTerraformCreateRDS(t *testing.T) {
-
+	const MODULE_NAME = "terraform-aws-rds-postgres"
 	testCases := initTestCases()
-
+	// Generate file containing GCS URL to be used on Jenkins.
+	// TERRATEST_BACKEND_BUCKET_NAME and TERRATEST_URL_FILE_NAME are both set on Jenkins declaration.
+	gcsTestExamplesURL := terratestutils.GenerateUrlFile(t, MODULE_NAME, os.Getenv("TERRATEST_BACKEND_BUCKET_NAME"), os.Getenv("TERRATEST_URL_FILE_NAME"))
 	for _, testCase := range testCases {
 		testCase := testCase
 
@@ -60,13 +67,20 @@ func TestTerraformCreateRDS(t *testing.T) {
 			})
 
 			defer test_structure.RunTestStage(t, "teardown", func() {
-				teraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
-				terraform.Destroy(t, teraformOptions)
+				terraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
+				terraformOptions.MaxRetries = 5
+
+				_, err := terraform.DestroyE(t, terraformOptions)
+				if err != nil {
+					// If there is an error on destroy, it will be logged.
+					logger.Log(t, err)
+				}
 			})
 
 			test_structure.RunTestStage(t, "setup_options", func() {
 				awsRegion := test_structure.LoadString(t, tempTestFolder, "region")
 				uniqueID := test_structure.LoadString(t, tempTestFolder, "unique_id")
+				backendConfig := terratestutils.ParseBackendConfig(t, gcsTestExamplesURL, testCase.testName, testCase.tfDir)
 
 				testCase.vars["name_prefix"] = uniqueID
 
@@ -76,6 +90,8 @@ func TestTerraformCreateRDS(t *testing.T) {
 					EnvVars: map[string]string{
 						"AWS_REGION": awsRegion,
 					},
+					BackendConfig: backendConfig,
+					MaxRetries:    2,
 				})
 
 				test_structure.SaveTerraformOptions(t, tempTestFolder, terraformOptions)
@@ -84,7 +100,14 @@ func TestTerraformCreateRDS(t *testing.T) {
 			test_structure.RunTestStage(t, "create_rds", func() {
 				terraformOptions := test_structure.LoadTerraformOptions(t, tempTestFolder)
 				_, err := terraform.InitAndApplyE(t, terraformOptions)
-
+				terraformConfig := &types.TerraformData{
+					TerraformBackendConfig: terraformOptions.BackendConfig,
+					TerraformVars:          terraformOptions.Vars,
+					TerraformEnvVars:       terraformOptions.EnvVars,
+				}
+				if _, err := terratestutils.UploadFilesE(t, terraformConfig); err != nil {
+					logger.Log(t, err)
+				}
 				if testCase.expectApplyError {
 					require.Error(t, err)
 					// If it failed as expected, we should skip the rest (validate function).

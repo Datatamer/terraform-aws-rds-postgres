@@ -15,6 +15,7 @@ import (
 
 // RdsTestCase is a struct for defining tests for Elastic Map Reduce Module
 type RdsTestCase struct {
+	tfDir            string
 	testName         string
 	vars             map[string]interface{}
 	expectApplyError bool

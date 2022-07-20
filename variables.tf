@@ -127,26 +127,9 @@ variable "tags" {
   default     = {}
 }
 
-variable "security_group_name" {
-  description = "Name for the security group for the rds instance"
-  type        = string
-  default     = "tamr_rds_sg"
-}
-
 variable "security_group_ids" {
   description = "List of security group IDs to associate"
   type        = list(string)
-}
-
-variable "vpc_id" {
-  description = "VPC ID for the rds security group"
-  type        = string
-}
-
-variable "additional_cidrs" {
-  description = "Additional CIDR to connect to RDS Postgres instance"
-  type        = list(string)
-  default     = []
 }
 
 variable "engine_version" {

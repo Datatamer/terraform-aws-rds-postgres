@@ -52,8 +52,6 @@ This terraform module will create:
 | rds\_subnet\_ids | VPC subnet IDs in subnet group | `list(string)` | n/a | yes |
 | security\_group\_ids | List of security group IDs to associate | `list(string)` | n/a | yes |
 | subnet\_group\_name | The name of the subnet group to add the RDS instance to | `string` | n/a | yes |
-| vpc\_id | VPC ID for the rds security group | `string` | n/a | yes |
-| additional\_cidrs | Additional CIDR to connect to RDS Postgres instance | `list(string)` | `[]` | no |
 | additional\_tags | [DEPRECATED: Use `tags` instead] Additional tags to set on the RDS instance. | `map(string)` | `{}` | no |
 | allocated\_storage | Allocate storage | `number` | `20` | no |
 | apply\_immediately | Apply immediately, do not set this to true for production | `bool` | `false` | no |
@@ -73,7 +71,6 @@ This terraform module will create:
 | parameter\_group\_family | The family of the DB parameter group | `string` | `"postgres12"` | no |
 | parameter\_group\_name | The name of the rds parameter group | `string` | `"rds-postgres-pg"` | no |
 | postgres\_name | The name of the postgres database to create on the DB instance | `string` | `"tamr_rds_db"` | no |
-| security\_group\_name | Name for the security group for the rds instance | `string` | `"tamr_rds_sg"` | no |
 | skip\_final\_snapshot | Skip final snapshot | `bool` | `true` | no |
 | storage\_type | Storage type (e.g. gp2, io1) | `string` | `"gp2"` | no |
 | tags | A map of tags to add to all resources. Replaces `additional_tags`. | `map(string)` | `{}` | no |

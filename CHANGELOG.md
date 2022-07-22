@@ -1,5 +1,8 @@
 # Tamr Terraform Template Repo
 
+## v4.0.0 - July 20th 2022
+* Remove unused variables security_group_name, vpc_id, and additional_cidrs
+
 ## v3.1.2 - May 11th 2022
 * Adds idle_in_transaction_session_timeout to parameter group
 

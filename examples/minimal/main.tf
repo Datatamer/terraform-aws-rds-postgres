@@ -8,7 +8,6 @@ module "rds_postgres" {
   username             = "exampleUsername"
   password             = "examplePassword" #tfsec:ignore:GEN003
 
-  vpc_id            = var.vpc_id
   subnet_group_name = "${var.name_prefix}_example_subnet_group"
   # Network requirement: DB subnet group needs a subnet in at least two Availability Zones
   rds_subnet_ids     = var.subnet_ids

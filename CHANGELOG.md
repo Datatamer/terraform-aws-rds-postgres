@@ -1,5 +1,8 @@
 # Tamr Terraform Template Repo
 
+## v4.0.1 - August 4th 2022
+* Adjusts AWS provider constraints to allow newer versions
+
 ## v4.0.0 - July 20th 2022
 * Remove unused variables security_group_name, vpc_id, and additional_cidrs
 

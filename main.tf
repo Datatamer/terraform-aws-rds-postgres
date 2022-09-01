@@ -29,6 +29,7 @@ resource "aws_db_subnet_group" "rds_postgres_subnet_group" {
 }
 
 resource "aws_db_instance" "rds_postgres" {
+  # 'name' is deprecated in favor of 'db_name' after provider version 4.0.0
   name = var.postgres_name
 
   identifier_prefix     = var.identifier_prefix

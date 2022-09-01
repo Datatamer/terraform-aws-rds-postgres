@@ -16,6 +16,7 @@ No provider.
 | subnet\_ids | List of at least 2 subnets in different AZs for DB subnet group | `list(string)` | n/a | yes |
 | vpc\_id | VPC ID of network. | `string` | n/a | yes |
 | egress\_cidr\_blocks | CIDR blocks to attach to security groups for egress | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| multi\_az | Specifies if the RDS instance is multi-AZ. | `bool` | `true` | no |
 | tags | A map of tags to add to all resources created by this example. | `map(string)` | <pre>{<br>  "Author": "Tamr",<br>  "Environment": "Example"<br>}</pre> | no |
 
 ## Outputs

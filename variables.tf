@@ -161,3 +161,15 @@ variable "multi_az" {
   type        = bool
   description = "Specifies if the RDS instance is multi-AZ."
 }
+
+variable "performance_insights_enabled" {
+  default     = false
+  type        = bool
+  description = "Specifies whether Performance Insights are enabled."
+}
+
+variable "performance_insights_retention_period" {
+  default     = 7
+  type        = number
+  description = "The amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)."
+}

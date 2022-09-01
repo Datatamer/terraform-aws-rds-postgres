@@ -65,6 +65,10 @@ resource "aws_db_instance" "rds_postgres" {
   copy_tags_to_snapshot = var.copy_tags_to_snapshot
   tags                  = local.effective_tags
 
+  # Performance Insights
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
+
   lifecycle {
     ignore_changes = [password]
   }

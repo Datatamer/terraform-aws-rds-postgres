@@ -47,7 +47,7 @@ resource "aws_db_instance" "rds_postgres" {
   port     = var.db_port
 
   db_subnet_group_name   = aws_db_subnet_group.rds_postgres_subnet_group.name
-  multi_az               = true
+  multi_az               = var.multi_az
   publicly_accessible    = false
   vpc_security_group_ids = var.security_group_ids
   parameter_group_name   = aws_db_parameter_group.rds_postgres_pg.name

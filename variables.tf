@@ -155,3 +155,9 @@ variable "enabled_cloudwatch_logs_exports" {
   type        = bool
   description = "Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch"
 }
+
+variable "multi_az" {
+  default     = true
+  type        = bool
+  description = "Specifies if the RDS instance is multi-AZ."
+}

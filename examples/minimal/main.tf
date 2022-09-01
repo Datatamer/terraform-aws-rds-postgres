@@ -1,5 +1,5 @@
 module "rds_postgres" {
-  # source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git?ref=3.0.0"
+  # source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git?ref=4.1.0"
   source = "../.."
 
   identifier_prefix    = "${var.name_prefix}-example-rds-pg-"
@@ -11,6 +11,7 @@ module "rds_postgres" {
   subnet_group_name = "${var.name_prefix}_example_subnet_group"
   # Network requirement: DB subnet group needs a subnet in at least two Availability Zones
   rds_subnet_ids     = var.subnet_ids
+  multi_az           = var.multi_az
   security_group_ids = module.rds-postgres-sg.security_group_ids
   tags               = var.tags
 }

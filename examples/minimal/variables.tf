@@ -8,6 +8,12 @@ variable "subnet_ids" {
   description = "List of at least 2 subnets in different AZs for DB subnet group"
 }
 
+variable "multi_az" {
+  default     = true
+  type        = bool
+  description = "Specifies if the RDS instance is multi-AZ."
+}
+
 variable "name_prefix" {
   description = "A string to prepend to names of resources created by this example"
 }

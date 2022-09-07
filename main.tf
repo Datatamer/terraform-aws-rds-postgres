@@ -29,6 +29,7 @@ resource "aws_db_subnet_group" "rds_postgres_subnet_group" {
 }
 
 resource "aws_db_instance" "rds_postgres" {
+  # 'name' is deprecated in favor of 'db_name' after provider version 4.0.0
   name = var.postgres_name
 
   identifier_prefix     = var.identifier_prefix
@@ -47,7 +48,7 @@ resource "aws_db_instance" "rds_postgres" {
   port     = var.db_port
 
   db_subnet_group_name   = aws_db_subnet_group.rds_postgres_subnet_group.name
-  multi_az               = true
+  multi_az               = var.multi_az
   publicly_accessible    = false
   vpc_security_group_ids = var.security_group_ids
   parameter_group_name   = aws_db_parameter_group.rds_postgres_pg.name
@@ -63,6 +64,10 @@ resource "aws_db_instance" "rds_postgres" {
 
   copy_tags_to_snapshot = var.copy_tags_to_snapshot
   tags                  = local.effective_tags
+
+  # Performance Insights
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
 
   lifecycle {
     ignore_changes = [password]

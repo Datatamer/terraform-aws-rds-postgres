@@ -66,10 +66,13 @@ This terraform module will create:
 | instance\_class | Instance class | `string` | `"db.m4.large"` | no |
 | maintenance\_window | Maintenance window | `string` | `"sun:04:32-sun:05:02"` | no |
 | max\_allocated\_storage | Max allocate storage | `number` | `1000` | no |
+| multi\_az | Specifies if the RDS instance is multi-AZ. | `bool` | `true` | no |
 | param\_log\_min\_duration\_statement | (ms) Sets the minimum execution time above which statements will be logged. | `string` | `"-1"` | no |
 | param\_log\_statement | Sets the type of statements logged. Valid values are none, ddl, mod, all | `string` | `"none"` | no |
 | parameter\_group\_family | The family of the DB parameter group | `string` | `"postgres12"` | no |
 | parameter\_group\_name | The name of the rds parameter group | `string` | `"rds-postgres-pg"` | no |
+| performance\_insights\_enabled | Specifies whether Performance Insights are enabled. | `bool` | `false` | no |
+| performance\_insights\_retention\_period | The amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years). | `number` | `7` | no |
 | postgres\_name | The name of the postgres database to create on the DB instance | `string` | `"tamr_rds_db"` | no |
 | skip\_final\_snapshot | Skip final snapshot | `bool` | `true` | no |
 | storage\_type | Storage type (e.g. gp2, io1) | `string` | `"gp2"` | no |

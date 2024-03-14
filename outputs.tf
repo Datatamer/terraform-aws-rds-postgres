@@ -26,7 +26,7 @@ output "rds_username" {
 }
 
 output "rds_dbname" {
-  value = aws_db_instance.rds_postgres.name
+  value = aws_db_instance.rds_postgres.db_name
 }
 
 output "cloudwatch_logs_path" {

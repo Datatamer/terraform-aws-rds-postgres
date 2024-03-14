@@ -11,7 +11,6 @@ module "rds_postgres" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.1.0"
 
   name = "${var.name_prefix}-terratest-vpc"
   cidr = var.vpc_cidr

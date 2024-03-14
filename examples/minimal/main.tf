@@ -2,9 +2,9 @@ module "rds_postgres" {
   # source               = "git::https://github.com/Datatamer/terraform-aws-rds-postgres.git?ref=4.1.0"
   source = "../.."
 
-  identifier_prefix    = "${var.name_prefix}-example-rds-pg-"
+  identifier_prefix    = "${var.name_prefix}example-rds-pg-"
   postgres_name        = "example0"
-  parameter_group_name = "${var.name_prefix}-example-rds-postgres-pg"
+  parameter_group_name = "${var.name_prefix}example-rds-postgres-pg"
   username             = "exampleUsername"
   password             = "examplePassword" #tfsec:ignore:GEN003
 

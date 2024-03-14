@@ -1,5 +1,8 @@
 # Tamr Terraform Template Repo
 
+## v5.0.0 - September 1st 2022
+* Update for breaking change in provider versions
+
 ## v4.1.0 - September 1st 2022
 * Adds support for configuring multiple AZs
 * Adds support for configuring performance insights

@@ -34,7 +34,7 @@ func initTestCases() []RdsTestCase {
 				"database_subnets":    []string{"172.18.0.0/24", "172.18.1.0/24"},
 				"egress_cidr_blocks":  []string{"0.0.0.0/0"},
 				"ingress_cidr_blocks": []string{"0.0.0.0/0"},
-				"name_prefix":         "",
+				"name_prefix":         "test",
 			},
 		},
 	}

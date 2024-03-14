@@ -15,6 +15,7 @@ variable "multi_az" {
 }
 
 variable "name_prefix" {
+  type        = string
   description = "A string to prepend to names of resources created by this example"
 }
 

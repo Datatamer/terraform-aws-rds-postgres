@@ -66,7 +66,7 @@ variable "storage_type" {
 variable "instance_class" {
   description = "Instance class"
   type        = string
-  default     = "db.m4.large"
+  default     = "db.m5.large"
 }
 
 variable "maintenance_window" {
